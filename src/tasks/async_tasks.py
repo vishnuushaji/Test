@@ -1,4 +1,3 @@
-# src/tasks/async_tasks.py
 from src.tasks.celery_config import celery_app
 from src.services.csv_validator import CSVValidator
 from src.services.image_processor import ImageProcessor

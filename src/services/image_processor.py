@@ -1,4 +1,3 @@
-# src/services/image_processor.py
 from PIL import Image
 import requests
 import io

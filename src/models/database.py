@@ -19,7 +19,7 @@ engine = create_engine(
     pool_size=10,
     max_overflow=20,
     pool_timeout=30,
-    pool_recycle=1800,  # Reconnect after 30 minutes
+    pool_recycle=1800, 
 )
 
 SessionLocal = sessionmaker(

@@ -1,7 +1,11 @@
 # main.py
-from fastapi import FastAPI
 from src.api import upload_api, status_api
 from src.models import database
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
+from src.utils.exceptions import CustomAPIException
+from src.utils.logger import logger
+from fastapi.openapi.utils import get_openapi
 
 # Create database tables
 database.Base.metadata.create_all(bind=database.engine)
@@ -16,11 +20,7 @@ if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
 
-# main.py
-from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse
-from src.utils.exceptions import CustomAPIException
-from src.utils.logger import logger
+
 
 app = FastAPI()
 
@@ -47,10 +47,6 @@ async def global_exception_handler(request: Request, exc: Exception):
         }
     )
 
-
-# main.py
-from fastapi import FastAPI
-from fastapi.openapi.utils import get_openapi
 
 def custom_openapi():
     if app.openapi_schema:

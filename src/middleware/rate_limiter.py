@@ -1,4 +1,3 @@
-# src/middleware/rate_limiter.py
 from fastapi import Request, HTTPException
 from functools import wraps
 import time

@@ -1,4 +1,3 @@
-# src/utils/metrics.py
 from prometheus_client import Counter, Histogram
 import time
 

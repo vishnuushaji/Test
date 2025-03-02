@@ -1,4 +1,3 @@
-# src/api/upload_api.py
 from fastapi import APIRouter, File, UploadFile, HTTPException
 from fastapi.responses import JSONResponse
 import uuid
@@ -9,14 +8,7 @@ from src.models.database import SessionLocal
 from src.models.models import ProcessingRequest
 
 router = APIRouter(prefix="/api/v1")
-# src/api/upload_api.py
-from fastapi import APIRouter, UploadFile, File
-from fastapi.responses import JSONResponse
-import uuid
-from src.services.csv_validator import CSVValidator
-from src.tasks.async_tasks import process_csv_task
 
-router = APIRouter()
 
 @router.post("/upload")
 async def upload_csv(file: UploadFile = File(...)):

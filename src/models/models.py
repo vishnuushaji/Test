@@ -1,4 +1,3 @@
-# src/models/models.py
 from sqlalchemy import Column, String, DateTime, Enum, UUID
 from sqlalchemy.sql import func
 import uuid

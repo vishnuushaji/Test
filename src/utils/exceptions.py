@@ -1,4 +1,3 @@
-# src/utils/exceptions.py
 from fastapi import HTTPException, status
 
 class CustomAPIException(HTTPException):

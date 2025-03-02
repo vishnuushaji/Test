@@ -1,4 +1,3 @@
-# src/tasks/celery_config.py
 from celery import Celery
 import os
 from dotenv import load_dotenv
