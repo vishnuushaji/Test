@@ -1,0 +1,90 @@
+version: '3.8'
+
+services:
+  web:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    command: uvicorn main:app --host 0.0.0.0 --port 8000
+    volumes:
+      - .:/app
+      - image_storage:/app/storage
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - redis
+    environment:
+      - DATABASE_HOST=db
+      - DATABASE_PORT=3306
+      - DATABASE_USER=imageuser
+      - DATABASE_PASSWORD=imagepassword
+      - DATABASE_NAME=imageprocessing
+      - REDIS_URL=redis://redis:6379/0
+      - STORAGE_PATH=/app/storage
+    networks:
+      - app_network
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: imageprocessing
+      MYSQL_USER: imageuser
+      MYSQL_PASSWORD: imagepassword
+    ports:
+      - "3307:3306"  # Changed from 3306:3306 to 3307:3306
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:6.2-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  celery_worker:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    command: celery -A src.tasks.celery_config worker --loglevel=info
+    volumes:
+      - .:/app
+      - image_storage:/app/storage
+    depends_on:
+      - db
+      - redis
+    environment:
+      - DATABASE_HOST=db
+      - DATABASE_PORT=3306
+      - DATABASE_USER=imageuser
+      - DATABASE_PASSWORD=imagepassword
+      - DATABASE_NAME=imageprocessing
+      - REDIS_URL=redis://redis:6379/0
+      - STORAGE_PATH=/app/storage
+    networks:
+      - app_network
+
+volumes:
+  mysql_data:
+  redis_data:
+  image_storage:
+
+networks:
+  app_network:
+    driver: bridge
